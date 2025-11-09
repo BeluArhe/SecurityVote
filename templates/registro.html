@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - SecurityVote</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">      
+</head>
+<body>
+
+    <div class="form-container">
+        <form id="registroForm">
+            <h2>Registro de Votante</h2>
+            
+            <div id="mensaje" class="mensaje"></div>
+
+            <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="dni">DNI</label>
+                <input type="text" id="dni" name="dni" required>
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" required>
+                <small id="errorCorreo" class="error-texto"></small>
+            </div>
+
+            <div class="form-group">
+                <label for="contraseña">Contraseña</label>
+                <input type="password" id="contraseña" name="contraseña" required>
+                <small id="errorPass" class="error-texto"></small>
+            </div>
+
+            <button type="submit" class="btn">Registrarse</button>
+            
+            <p class="form-link">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/registro.js') }}"></script>
+</body>
+</html>

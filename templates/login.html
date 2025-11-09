@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - SecurityVote</title>
+    </head>
+<body>
+    <h2>Iniciar Sesión en SecurityVote</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="color: {{ 'green' if category == 'success' else 'red' }};">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <div>
+            <label for="correo">Correo Electrónico:</label>
+            <input type="email" id="correo" name="correo" required>
+        </div>
+        <div>
+            <label for="contraseña">Contraseña:</label>
+            <input type="password" id="contraseña" name="contraseña" required>
+        </div>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+    <p>¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a></p>
+</body>
+</html>
