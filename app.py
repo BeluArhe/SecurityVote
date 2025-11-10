@@ -2,11 +2,24 @@
 
 # Necesitas importar jsonify
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from werkzeug.security import generate_password_hash
 import oracledb
+import logging
+from config import crear_pool
 # ... (el resto de tu setup) ...
 
 # Crear la aplicación Flask (necesario antes de usar @app.route)
 app = Flask(__name__)
+
+# Intentar crear un pool de conexiones a la base de datos Oracle
+logger = logging.getLogger(__name__)
+pool = None
+try:
+    pool = crear_pool()
+    if pool is None:
+        logger.warning('Pool de Oracle no creado; las operaciones de BD pueden fallar')
+except Exception as e:
+    logger.exception('Error al inicializar el pool de Oracle: %s', e)
 
 
 @app.route("/")
@@ -31,6 +44,12 @@ def registro():
     dni = data.get('dni')
     correo = data.get('correo')
     contraseña = data.get('contraseña')
+    # Validaciones básicas
+    if not contraseña or len(contraseña) < 6:
+        return jsonify({"status": "error", "message": "La contraseña debe tener al menos 6 caracteres."}), 400
+
+    # Hashear la contraseña antes de guardarla
+    contraseña_hash = generate_password_hash(contraseña)
     
     # (Validaciones y hasheo de contraseña irían aquí)
 
@@ -41,7 +60,8 @@ def registro():
                 INSERT INTO USUARIO (nombre, dni, correo, contraseña, rol)
                 VALUES (:1, :2, :3, :4, 'VOTANTE')
             """
-            cursor.execute(sql_insert, [nombre, dni, correo, contraseña])
+            # Usamos la contraseña hasheada
+            cursor.execute(sql_insert, [nombre, dni, correo, contraseña_hash])
             connection.commit()
             
             # Devuelve una respuesta JSON exitosa
